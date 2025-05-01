@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 const corsOptions = {
   origin: process.env.NODE_ENV === 'development' 
     ? ['http://localhost:5000', 'http://localhost:5173', 'http://127.0.0.1:5000', 'http://127.0.0.1:5173']
-    : process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000'],
+    : process.env.ALLOWED_ORIGINS?.split(',') || ['https://your-netlify-url.netlify.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
