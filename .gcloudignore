@@ -1,0 +1,34 @@
+# Exclude client-side code
+client/
+shared/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log
+
+# Git and GitHub files
+.git/
+.github/
+.gitignore
+
+# Development files
+*.md
+LICENSE
+setup.ps1
+setup.sh
+start-dev.ps1
+start-dev.sh
+
+# Local environment configurations
+.env*
+
+# Build artifacts
+dist/
+build/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store 
