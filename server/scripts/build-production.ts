@@ -37,6 +37,8 @@ async function main() {
         '@vitejs/plugin-react', 
         'react',
         'react-dom',
+        '@replit/vite-plugin-runtime-error-modal',
+        '@replit/vite-plugin-cartographer',
         '../vite.config',
         // Add other frontend-only dependencies here
       ],
@@ -79,8 +81,14 @@ export const createLogger = () => ({ info: () => {}, error: () => {} });
 export default function() { return { name: 'react-stub' }; }
     `;
     
+    const replitStubContent = `
+// Stub for @replit/vite-plugin-runtime-error-modal
+export default function() { return { name: 'runtime-error-modal-stub' }; }
+    `;
+    
     fs.writeFileSync(path.join(rootDir, 'dist', 'vite-stub.js'), viteStubContent);
     fs.writeFileSync(path.join(rootDir, 'dist', 'react-stub.js'), viteReactStubContent);
+    fs.writeFileSync(path.join(rootDir, 'dist', 'replit-stub.js'), replitStubContent);
     
     console.log('Created stub files for production environment');
   } catch (error) {

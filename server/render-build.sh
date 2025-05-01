@@ -14,6 +14,29 @@ mkdir -p scripts
 mkdir -p models
 mkdir -p services
 
+# Create Replit stubs
+cat > replit-stub.js << 'EOF'
+// Stub implementation for @replit/vite-plugin-runtime-error-modal
+export default function runtimeErrorModalPlugin() {
+  return {
+    name: 'runtime-error-modal-stub',
+    apply: 'serve',
+    configureServer() {},
+    transform() { return null; }
+  };
+}
+
+// Also stub @replit/vite-plugin-cartographer
+export function cartographerPlugin() {
+  return {
+    name: 'cartographer-stub',
+    apply: 'serve',
+    configureServer() {},
+    transform() { return null; }
+  };
+}
+EOF
+
 # Copy models if needed
 if [ ! -f "models/user.js" ] && [ -f "models/user.ts" ]; then
   echo "Models directory found"
@@ -63,6 +86,8 @@ async function main() {
         '@vitejs/plugin-react', 
         'react',
         'react-dom',
+        '@replit/vite-plugin-runtime-error-modal',
+        '@replit/vite-plugin-cartographer',
         '../vite.config',
         // Add other frontend-only dependencies here
       ],
@@ -105,8 +130,18 @@ export const createLogger = () => ({ info: () => {}, error: () => {} });
 export default function() { return { name: 'react-stub' }; }
     `;
     
+    const replitStubContent = `
+// Stub for @replit/vite-plugin-runtime-error-modal
+export default function() { return { name: 'runtime-error-modal-stub' }; }
+export function cartographerPlugin() { return { name: 'cartographer-stub' }; }
+    `;
+    
     fs.writeFileSync(path.join(rootDir, 'dist', 'vite-stub.js'), viteStubContent);
     fs.writeFileSync(path.join(rootDir, 'dist', 'react-stub.js'), viteReactStubContent);
+    fs.writeFileSync(path.join(rootDir, 'dist', 'replit-stub.js'), replitStubContent);
+    
+    // Copy the replit-stub.js file to the dist directory
+    fs.copyFileSync(path.join(rootDir, 'replit-stub.js'), path.join(rootDir, 'dist', 'replit-stub.js'));
     
     console.log('Created stub files for production environment');
   } catch (error) {

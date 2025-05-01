@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development tsx index.ts",
     "dev:win": "$env:NODE_ENV='development'; tsx index.ts",
     "build": "esbuild index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "render-build": "NODE_ENV=production npx esbuild index.ts --platform=node --bundle --external:vite --external:@vitejs/plugin-react --external:react --external:react-dom --external:../vite.config --format=esm --outdir=dist",
+    "render-build": "NODE_ENV=production npx esbuild index.ts --platform=node --bundle --external:vite --external:@vitejs/plugin-react --external:react --external:react-dom --external:../vite.config --external:@replit/vite-plugin-runtime-error-modal --format=esm --outdir=dist",
     "build:production": "NODE_ENV=production tsx scripts/build-production.ts",
     "start": "NODE_ENV=production node dist/index.js",
     "postinstall": "chmod +x render-build.sh",
@@ -18,6 +18,7 @@
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
+    "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
     "@vitejs/plugin-react": "^4.3.2",
     "axios": "^1.9.0",
     "bcryptjs": "^2.4.3",
