@@ -8,9 +8,16 @@ npm install --include=dev
 # Set the environment to production during build
 export NODE_ENV=production
 
-# Make server/shared directory if it doesn't exist
+# Make sure all required directories exist
 mkdir -p shared
 mkdir -p scripts
+mkdir -p models
+mkdir -p services
+
+# Copy models if needed
+if [ ! -f "models/user.js" ] && [ -f "models/user.ts" ]; then
+  echo "Models directory found"
+fi
 
 # Create the production build script if it doesn't exist
 if [ ! -f "scripts/build-production.ts" ]; then
@@ -34,6 +41,11 @@ async function main() {
     // 1. Create dist directory if it doesn't exist
     if (!fs.existsSync(path.join(rootDir, 'dist'))) {
       fs.mkdirSync(path.join(rootDir, 'dist'));
+    }
+    
+    // Create shared directory in dist
+    if (!fs.existsSync(path.join(rootDir, 'dist', 'shared'))) {
+      fs.mkdirSync(path.join(rootDir, 'dist', 'shared'));
     }
 
     // 2. Build the server
@@ -60,11 +72,27 @@ async function main() {
       banner: {
         js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
       },
+      alias: {
+        '@shared': path.join(rootDir, 'shared')
+      }
+    });
+
+    // 3. Build shared schema separately
+    await build({
+      entryPoints: [path.join(rootDir, 'shared', 'schema.ts')],
+      outfile: path.join(rootDir, 'dist', 'shared', 'schema.js'),
+      bundle: true,
+      platform: 'node',
+      format: 'esm',
+      external: ['mongoose', 'zod'], // These will be resolved at runtime
+      define: {
+        'process.env.NODE_ENV': '"production"'
+      }
     });
 
     console.log('Production build completed successfully!');
     
-    // 3. Create stub files
+    // 4. Create stub files
     const viteStubContent = `
 // Stub implementation for Vite in production
 export default { middlewares: () => {} };

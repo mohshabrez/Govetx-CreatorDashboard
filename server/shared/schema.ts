@@ -11,12 +11,16 @@ export const userSchema = z.object({
 });
 
 export type InsertUser = z.infer<typeof userSchema>;
-export const User = mongoose.model('User', new mongoose.Schema({
+// Use different name to avoid conflicts with models/user.ts
+export const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
-}, { timestamps: true }));
+}, { timestamps: true });
+
+// Check if model exists already to prevent overwrite errors
+export const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 // Credit schema
 export const creditSchema = z.object({
@@ -25,12 +29,17 @@ export const creditSchema = z.object({
   reason: z.string(),
 });
 
+export const insertCreditsSchema = creditSchema;
 export type InsertCredit = z.infer<typeof creditSchema>;
-export const Credit = mongoose.model('Credit', new mongoose.Schema({
+// Use different name to avoid conflicts with models/credit.ts
+export const CreditSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   amount: { type: Number, required: true },
   reason: { type: String, required: true },
-}, { timestamps: true }));
+}, { timestamps: true });
+
+// Check if model exists already to prevent overwrite errors
+export const Credit = mongoose.models.Credit || mongoose.model('Credit', CreditSchema);
 
 // Saved content schema
 export const savedContentSchema = z.object({

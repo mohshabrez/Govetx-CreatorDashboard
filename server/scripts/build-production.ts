@@ -16,6 +16,11 @@ async function main() {
     if (!fs.existsSync(path.join(rootDir, 'dist'))) {
       fs.mkdirSync(path.join(rootDir, 'dist'));
     }
+    
+    // Create shared directory in dist
+    if (!fs.existsSync(path.join(rootDir, 'dist', 'shared'))) {
+      fs.mkdirSync(path.join(rootDir, 'dist', 'shared'));
+    }
 
     // 2. Build the server
     await build({
@@ -41,11 +46,27 @@ async function main() {
       banner: {
         js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
       },
+      alias: {
+        '@shared': path.join(rootDir, 'shared')
+      }
+    });
+
+    // 3. Build shared schema separately
+    await build({
+      entryPoints: [path.join(rootDir, 'shared', 'schema.ts')],
+      outfile: path.join(rootDir, 'dist', 'shared', 'schema.js'),
+      bundle: true,
+      platform: 'node',
+      format: 'esm',
+      external: ['mongoose', 'zod'], // These will be resolved at runtime
+      define: {
+        'process.env.NODE_ENV': '"production"'
+      }
     });
 
     console.log('Production build completed successfully!');
     
-    // 3. Create stub files
+    // 4. Create stub files
     const viteStubContent = `
 // Stub implementation for Vite in production
 export default { middlewares: () => {} };

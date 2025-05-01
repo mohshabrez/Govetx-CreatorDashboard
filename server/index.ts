@@ -1,5 +1,17 @@
 import 'dotenv/config';
 
+// Setup import resolution for production
+if (process.env.NODE_ENV === 'production') {
+  // Use dynamic import to avoid issues during build
+  // @ts-ignore - Ignore TS error for runtime JS file
+  import('./resolve-imports.js').then(({ patchImports }) => {
+    patchImports();
+    console.log('Import resolution patched for production');
+  }).catch(err => {
+    console.error('Error patching imports:', err);
+  });
+}
+
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
