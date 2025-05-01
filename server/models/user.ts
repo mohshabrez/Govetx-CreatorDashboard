@@ -1,33 +1,42 @@
 import mongoose from 'mongoose';
 
+// User schema
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
+  username: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 30
+  },
+  email: { 
+    type: String, 
+    required: true, 
+    unique: true,
+    trim: true,
+    lowercase: true
+  },
+  password: { 
+    type: String, 
     required: true,
-    unique: true
+    minlength: 6
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
+  role: { 
+    type: String, 
+    enum: ['user', 'admin'], 
+    default: 'user' 
   },
-  password: {
-    type: String,
-    required: true
+  profileComplete: {
+    type: Boolean,
+    default: false
   },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
-  lastLoginAt: {
+  lastLogin: {
     type: Date,
     default: null
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
+}, { 
+  timestamps: true 
 });
 
 // Check if model exists before creating

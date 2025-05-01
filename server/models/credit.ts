@@ -1,24 +1,38 @@
 import mongoose from 'mongoose';
 
+// Credit schema for tracking user credits
 const creditSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true,
+    index: true
   },
-  amount: {
-    type: Number,
-    required: true
+  amount: { 
+    type: Number, 
+    required: true 
   },
-  reason: {
-    type: String,
-    required: true
+  reason: { 
+    type: String, 
+    required: true,
+    enum: [
+      'login_bonus',
+      'profile_completion',
+      'feed_interaction',
+      'content_save',
+      'admin_grant',
+      'other'
+    ]
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  metadata: {
+    type: Object,
+    default: {}
   }
+}, { 
+  timestamps: true 
 });
 
-// Check if model exists before creating
-export const Credit = mongoose.models.Credit || mongoose.model('Credit', creditSchema); 
+// Create indexes for faster queries
+creditSchema.index({ userId: 1, createdAt: -1 });
+
+export const Credit = mongoose.model('Credit', creditSchema); 

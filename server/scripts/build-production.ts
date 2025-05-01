@@ -1,22 +1,3 @@
-#!/usr/bin/env bash
-# exit on error
-set -o errexit
-
-# Install all dependencies including dev dependencies
-npm install --include=dev
-
-# Set the environment to production during build
-export NODE_ENV=production
-
-# Make server/shared directory if it doesn't exist
-mkdir -p shared
-mkdir -p scripts
-
-# Create the production build script if it doesn't exist
-if [ ! -f "scripts/build-production.ts" ]; then
-  echo "Creating production build script..."
-  mkdir -p scripts
-  cat > scripts/build-production.ts << 'EOF'
 /**
  * This script creates a production build that avoids bundling Vite and other
  * frontend-only dependencies in the server code.
@@ -87,10 +68,4 @@ export default function() { return { name: 'react-stub' }; }
   }
 }
 
-main();
-EOF
-fi
-
-# Run the production build
-echo "Running production build..."
-npx tsx scripts/build-production.ts 
+main(); 
