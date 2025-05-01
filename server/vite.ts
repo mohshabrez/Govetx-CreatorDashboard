@@ -1,12 +1,8 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
-import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
-
-const viteLogger = createLogger();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -20,10 +16,24 @@ export function log(message: string, source = "express") {
 }
 
 export async function setupVite(app: Express, server: Server) {
+  if (process.env.NODE_ENV !== 'development') {
+    console.log('Not in development mode, skipping Vite setup');
+    return;
+  }
+
+  // Dynamically import Vite only in development
+  const { createServer: createViteServer, createLogger } = await import("vite");
+  
+  // Use dynamic import for the vite config too
+  const viteConfigModule = await import("../vite.config.js");
+  const viteConfig = viteConfigModule.default;
+  
+  const viteLogger = createLogger();
+
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
-    allowedHosts: true,
+    allowedHosts: true as true,
   };
 
   const vite = await createViteServer({

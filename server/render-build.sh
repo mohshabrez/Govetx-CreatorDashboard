@@ -4,4 +4,9 @@ set -o errexit
 
 # Install all dependencies including dev dependencies
 npm install --include=dev
-npm run build 
+
+# Set the environment to production during build
+export NODE_ENV=production
+
+# Run the specialized build command for Render
+npm run render-build 
