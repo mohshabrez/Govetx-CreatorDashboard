@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=development tsx index.ts",
     "dev:win": "$env:NODE_ENV='development'; tsx index.ts",
     "build": "esbuild index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "render-build": "npx esbuild index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
     "postinstall": "chmod +x render-build.sh",
     "check": "tsc",
@@ -22,6 +23,7 @@
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.39.1",
     "drizzle-zod": "^0.7.0",
+    "esbuild": "^0.25.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
@@ -45,7 +47,6 @@
     "@types/passport-local": "^1.0.38",
     "@types/ws": "^8.5.13",
     "drizzle-kit": "^0.30.4",
-    "esbuild": "^0.25.0",
     "tsx": "^4.19.1",
     "typescript": "5.6.3"
   },

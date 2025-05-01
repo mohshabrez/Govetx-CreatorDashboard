@@ -2,5 +2,6 @@
 # exit on error
 set -o errexit
 
-npm install
+# Install all dependencies including dev dependencies
+npm install --include=dev
 npm run build 
