@@ -13,3 +13,6 @@ npm-debug.log*
 .vscode/
 .idea/
 .replit/
+
+# Local Netlify folder
+.netlify

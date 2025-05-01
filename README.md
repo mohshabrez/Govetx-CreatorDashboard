@@ -56,58 +56,48 @@ git clone https://github.com/yourusername/creator-dashboard.git
 cd creator-dashboard
 ```
 
-2. Run the setup script
-
-**Windows (PowerShell):**
-```bash
-./setup.ps1
-```
-
-**Linux/macOS (Bash):**
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-
-These scripts will:
-- Install dependencies for both client and server
-- Create example `.env` files if they don't exist
-- Guide you through next steps
-
-Alternatively, you can install dependencies manually:
+2. Install dependencies
 
 ```bash
-# Install all dependencies
+# Install dependencies for monorepo, client, and server
 npm run install:all
+```
 
-# Or install them separately
+Or install them individually:
+
+```bash
+# Install root dependencies
 npm install
+
+# Install client dependencies
 cd client && npm install
+
+# Install server dependencies
+cd server && npm install
 ```
 
 3. Environment Setup
-Create `.env` files in both server and client directories with the required environment variables. The setup scripts will create example files for you.
+Create `.env` files in both server and client directories with the required environment variables.
 
 ### Running the Application
 
 #### Development Mode
 
-Start both server and client using the provided scripts:
+Start both server and client:
 
-**Windows (PowerShell):**
+**Windows:**
 ```bash
-./start-dev.ps1
+npm run dev:win
 ```
 
-**Linux/macOS (Bash):**
+**Linux/macOS:**
 ```bash
-chmod +x start-dev.sh
-./start-dev.sh
+npm run dev
 ```
 
 Or start them individually:
 
-**Windows (PowerShell):**
+**Windows:**
 ```bash
 # Server
 npm run dev:server:win
@@ -116,7 +106,7 @@ npm run dev:server:win
 npm run dev:client
 ```
 
-**Linux/macOS (Bash):**
+**Linux/macOS:**
 ```bash
 # Server
 npm run dev:server
@@ -126,27 +116,20 @@ npm run dev:client
 ```
 
 The application will be available at:
-- Frontend: http://localhost:5000
+- Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 
 ## Deployment
 
-For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
+### Backend (Google Cloud Run)
 
-### Quick Deployment Overview
-
-#### Backend (Google Cloud Run)
-1. Set up a Google Cloud Platform account
-2. Install Google Cloud SDK
-3. Build and deploy using the included Dockerfile:
 ```bash
-gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/creator-dashboard-server
-gcloud run deploy creator-dashboard-server --image gcr.io/YOUR_PROJECT_ID/creator-dashboard-server
+cd server
+npm run deploy:gcp
 ```
 
-#### Frontend (Netlify)
-1. Set up a Netlify account
-2. Connect your repository or deploy manually:
+### Frontend (Netlify)
+
 ```bash
 cd client
 npm run build
@@ -173,6 +156,10 @@ creator-dashboard/
 │   └── index.ts            # Server entry point
 └── README.md               # Project documentation
 ```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## API Integrations
 
@@ -208,10 +195,6 @@ Required credentials:
 3. Manage user credit balances
 4. Monitor reported content
 5. Review system activity logs
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
