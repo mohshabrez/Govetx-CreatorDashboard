@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development tsx index.ts",
     "dev:win": "$env:NODE_ENV='development'; tsx index.ts",
     "build": "esbuild index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "render-build": "npx esbuild index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "render-build": "npx esbuild index.ts --platform=node --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
     "postinstall": "chmod +x render-build.sh",
     "check": "tsc",
@@ -17,6 +17,7 @@
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
+    "axios": "^1.9.0",
     "bcryptjs": "^2.4.3",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
