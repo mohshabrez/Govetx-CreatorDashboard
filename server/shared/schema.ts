@@ -1,6 +1,9 @@
 // Define basic types used across both client and server
 import mongoose from 'mongoose';
 import { z } from 'zod';
+// Import using require to avoid TypeScript issues
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { registerMongooseModel } = require('../import-resolver');
 
 // User schema
 export const userSchema = z.object({
@@ -19,8 +22,8 @@ export const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
 }, { timestamps: true });
 
-// Check if model exists already to prevent overwrite errors
-export const User = mongoose.models.User || mongoose.model('User', UserSchema);
+// Register User model with our helper
+export const User = registerMongooseModel(mongoose, 'User', UserSchema);
 
 // Credit schema
 export const creditSchema = z.object({
@@ -31,15 +34,8 @@ export const creditSchema = z.object({
 
 export const insertCreditsSchema = creditSchema;
 export type InsertCredit = z.infer<typeof creditSchema>;
-// Use different name to avoid conflicts with models/credit.ts
-export const CreditSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  amount: { type: Number, required: true },
-  reason: { type: String, required: true },
-}, { timestamps: true });
-
-// Check if model exists already to prevent overwrite errors
-export const Credit = mongoose.models.Credit || mongoose.model('Credit', CreditSchema);
+// DO NOT define the Credit mongoose model here - it's defined in models/credit.ts
+// This prevents the "OverwriteModelError: Cannot overwrite 'Credit' model once compiled" error
 
 // Saved content schema
 export const savedContentSchema = z.object({
@@ -53,14 +49,17 @@ export const savedContentSchema = z.object({
 
 export const insertSavedContentSchema = savedContentSchema;
 export type InsertSavedContent = z.infer<typeof savedContentSchema>;
-export const SavedContent = mongoose.model('SavedContent', new mongoose.Schema({
+export const SavedContentSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   contentId: { type: String, required: true },
   source: { type: String, enum: ['reddit', 'twitter'], required: true },
   contentUrl: { type: String, required: true },
   content: { type: String, required: true },
   authorName: { type: String, required: true },
-}, { timestamps: true }));
+}, { timestamps: true });
+
+// Register SavedContent model with our helper
+export const SavedContent = registerMongooseModel(mongoose, 'SavedContent', SavedContentSchema);
 
 // Reported content schema
 export const reportedContentSchema = z.object({
@@ -73,13 +72,16 @@ export const reportedContentSchema = z.object({
 
 export const insertReportedContentSchema = reportedContentSchema;
 export type InsertReportedContent = z.infer<typeof reportedContentSchema>;
-export const ReportedContent = mongoose.model('ReportedContent', new mongoose.Schema({
+export const ReportedContentSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   contentId: { type: String, required: true },
   source: { type: String, enum: ['reddit', 'twitter'], required: true },
   contentUrl: { type: String, required: true },
   reason: { type: String, required: true },
-}, { timestamps: true }));
+}, { timestamps: true });
+
+// Register ReportedContent model with our helper
+export const ReportedContent = registerMongooseModel(mongoose, 'ReportedContent', ReportedContentSchema);
 
 // Feed item type
 export type FeedItem = {

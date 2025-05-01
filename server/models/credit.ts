@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+// Import using require to avoid TypeScript issues
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { registerMongooseModel } = require('../import-resolver');
 
 // Credit schema for tracking user credits
 const creditSchema = new mongoose.Schema({
@@ -35,4 +38,5 @@ const creditSchema = new mongoose.Schema({
 // Create indexes for faster queries
 creditSchema.index({ userId: 1, createdAt: -1 });
 
-export const Credit = mongoose.model('Credit', creditSchema); 
+// Register model using our helper to prevent duplicate compilation
+export const Credit = registerMongooseModel(mongoose, 'Credit', creditSchema); 

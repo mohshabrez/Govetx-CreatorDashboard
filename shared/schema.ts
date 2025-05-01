@@ -40,11 +40,11 @@ const reportedContentSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Create models
-export const User = mongoose.model('User', userSchema);
-export const Credit = mongoose.model('Credit', creditSchema);
-export const SavedContent = mongoose.model('SavedContent', savedContentSchema);
-export const ReportedContent = mongoose.model('ReportedContent', reportedContentSchema);
+// Create models - use conditional creation to prevent duplicate model registration
+export const User = mongoose.models.User || mongoose.model('User', userSchema);
+export const Credit = mongoose.models.Credit || mongoose.model('Credit', creditSchema);
+export const SavedContent = mongoose.models.SavedContent || mongoose.model('SavedContent', savedContentSchema);
+export const ReportedContent = mongoose.models.ReportedContent || mongoose.model('ReportedContent', reportedContentSchema);
 
 // Zod schemas for validation
 export const insertUserSchema = z.object({

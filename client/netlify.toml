@@ -1,6 +1,10 @@
 [build]
-  command = "chmod +x ./netlify-build.sh && ./netlify-build.sh"
+  command = "node build.js"
   publish = "dist"
+
+[build.environment]
+  # Setting a default API URL here - this should be updated in the Netlify dashboard
+  VITE_API_URL = "https://govetx-creator-dashboard.onrender.com"
 
 [[redirects]]
   from = "/*"

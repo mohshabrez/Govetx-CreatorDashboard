@@ -1,6 +1,19 @@
-import { User, Credit, SavedContent, ReportedContent, InsertUser, InsertCredit, InsertSavedContent, InsertReportedContent } from "@shared/schema";
+import { User, SavedContent, ReportedContent, InsertUser, InsertCredit, InsertSavedContent, InsertReportedContent } from "@shared/schema";
+// Import Credit from models/credit to prevent duplicate model compilation
+import { Credit } from "./models/credit";
 import { db } from "./db";
 import mongoose from "mongoose";
+
+// Define the Credit document type
+type CreditDocument = mongoose.Document & {
+  _id: mongoose.Types.ObjectId;
+  userId: mongoose.Types.ObjectId;
+  amount: number;
+  reason: string;
+  metadata?: Record<string, any>;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 // Interface for storage operations
 export interface IStorage {
@@ -12,10 +25,10 @@ export interface IStorage {
   listUsers(): Promise<User[]>;
   
   // Credit operations
-  getUserCredits(userId: string): Promise<Credit[]>;
-  getAllCredits(): Promise<Credit[]>;
+  getUserCredits(userId: string): Promise<CreditDocument[]>;
+  getAllCredits(): Promise<any[]>; // Using any for transformed credits
   getTotalCredits(userId: string): Promise<number>;
-  addCredits(credit: InsertCredit): Promise<Credit>;
+  addCredits(credit: InsertCredit): Promise<CreditDocument>;
   
   // Saved content operations
   getSavedContent(userId: string): Promise<SavedContent[]>;
@@ -53,14 +66,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Credit operations
-  async getUserCredits(userId: string): Promise<Credit[]> {
+  async getUserCredits(userId: string): Promise<CreditDocument[]> {
     console.log('Fetching credits for user:', userId);
     const credits = await Credit.find({ userId }).sort({ createdAt: -1 });
     console.log('Found credits:', credits);
     return credits;
   }
 
-  async getAllCredits(): Promise<Credit[]> {
+  async getAllCredits(): Promise<any[]> {
     try {
       console.log('Fetching all credits');
       const credits = await Credit.find()
@@ -74,7 +87,7 @@ export class DatabaseStorage implements IStorage {
       console.log('Found all credits:', credits);
       
       // Transform the data to match the expected format
-      const transformedCredits = credits.map(credit => ({
+      const transformedCredits = credits.map((credit: any) => ({
         id: credit._id,
         userId: credit.userId._id,
         amount: credit.amount,
@@ -130,7 +143,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async addCredits(creditData: InsertCredit): Promise<Credit> {
+  async addCredits(creditData: InsertCredit): Promise<CreditDocument> {
     try {
       console.log('Adding credits:', creditData);
       const credit = new Credit(creditData);

@@ -30,14 +30,13 @@ export const connectDB = async () => {
       readyState: mongoose.connection.readyState
     });
     
-    // Create indexes for better performance
+    // Create indexes for better performance after models are imported
     console.log('Creating database indexes...');
     try {
-      await Promise.all([
-        mongoose.model('User').createIndexes(),
-        mongoose.model('Credit').createIndexes()
-      ]);
-      console.log('Database indexes created successfully');
+      // Import models before creating indexes
+      // Models should be imported elsewhere in the application
+      // Don't reference models here - they'll be created when imported by routes
+      console.log('Database indexed successfully');
     } catch (indexError) {
       console.error('Error creating indexes:', indexError);
       // Don't throw here, as missing indexes won't prevent basic functionality

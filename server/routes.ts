@@ -7,6 +7,7 @@ import { SocialFeedService } from "./services/socialFeed";
 import { insertSavedContentSchema, insertReportedContentSchema, insertCreditsSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { verifyToken } from "./auth";
+// Import Credit only from models/credit to prevent duplicate model compilation
 import { Credit } from "./models/credit";
 import { User } from "./models/user";
 
